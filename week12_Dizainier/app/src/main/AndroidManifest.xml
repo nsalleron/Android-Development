@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.salleron.nicolas.findmycity">
+    package="fr.salleron.nicolas.dizainier">
 
     <application
         android:allowBackup="true"

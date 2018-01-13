@@ -1,4 +1,4 @@
-package fr.salleron.nicolas.findmycity
+package fr.salleron.nicolas.dizainier
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
