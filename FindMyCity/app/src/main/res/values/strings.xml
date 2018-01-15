@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">FindMyCity</string>
-
+    <string name="api_id">839261952976</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_About">About</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="lvl0">Difficulté 0</string>
     <string name="lvl1">Difficulté 1</string>
     <string name="lvl2">Difficulté 2</string>
     <string name="options">Options</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

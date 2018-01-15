@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">839261952976</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">fr.salleron.nicolas.findmycity</string>
+    <!-- achievement Bravo ! Vous avez dépassé 1 niveau ! -->
+    <string name="achievement_bravo__vous_avez_dpass_1_niveau" translatable="false">CgkI0Lekv7YYEAIQBA</string>
+    <!-- achievement Alors c'est 2 avenue de ... -->
+    <string name="achievement_alors_cest_2_avenue_de_..." translatable="false">CgkI0Lekv7YYEAIQBg</string>
+    <!-- achievement Master SAR représente -->
+    <string name="achievement_master_sar_reprsente" translatable="false">CgkI0Lekv7YYEAIQBw</string>
+    <!-- achievement PPM mon ami -->
+    <string name="achievement_ppm_mon_ami" translatable="false">CgkI0Lekv7YYEAIQCA</string>
+    <!-- leaderboard classement_test_1 -->
+    <string name="leaderboard_classement_test_1" translatable="false">CgkI0Lekv7YYEAIQBQ</string>
+    <!-- event leaderboard_test_1 -->
+    <string name="event_leaderboard_test_1" translatable="false">CgkI0Lekv7YYEAIQAw</string>
+</resources>

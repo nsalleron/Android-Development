@@ -20,11 +20,16 @@
             android:name=".activities.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <activity
+            android:name=".activities.ScoreAboutActivity"
+            android:theme="@style/Theme.Design.Light" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDv_A15aP-WZxS6EXR2sa-JkKJTPkpiTWM" />
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
     </application>
 
 </manifest>

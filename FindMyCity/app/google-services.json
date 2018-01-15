@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "839261952976",
+    "firebase_url": "https://findmycity-25395.firebaseio.com",
+    "project_id": "findmycity-25395",
+    "storage_bucket": "findmycity-25395.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839261952976:android:0ce6857f8aadbcb0",
+        "android_client_info": {
+          "package_name": "fr.salleron.nicolas.findmycity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839261952976-kqqh52v1qlj7r3242og8luosi4kt9cvn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.salleron.nicolas.findmycity",
+            "certificate_hash": "225613bb9645c7871d4883d31de1569a98d2afc8"
+          }
+        },
+        {
+          "client_id": "839261952976-vatqlvq5j6qghq72sns02o3phikbacmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj43A0P-5X1YX8l2QaFwA9FnJShZj0vaM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839261952976-vatqlvq5j6qghq72sns02o3phikbacmv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

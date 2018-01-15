@@ -5,40 +5,65 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import fr.salleron.nicolas.findmycity.data.Difficulty
 import fr.salleron.nicolas.findmycity.R
+import android.util.Log
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.games.Games
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    var Btn0: Button? = null
-    var Btn1: Button? = null
-    var Btn2: Button? = null
+    @Suppress("PrivatePropertyName")
+    private val TAG = "MainActivity"
+    private var btn0: Button? = null
+    private var btn1: Button? = null
+    private var btn2: Button? = null
+    private var options : Button? = null
+    private var apiClient:GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Btn0 = findViewById(R.id.lvl0)
-        Btn1 = findViewById(R.id.lvl1)
-        Btn2 = findViewById(R.id.lvl2)
+        btn0 = findViewById(R.id.lvl0)
+        btn1 = findViewById(R.id.lvl1)
+        btn2 = findViewById(R.id.lvl2)
+        options = findViewById(R.id.options)
 
-        Btn0?.setOnClickListener(this)
-        Btn1?.setOnClickListener(this)
-        Btn2?.setOnClickListener(this)
+        btn0?.setOnClickListener(this)
+        btn1?.setOnClickListener(this)
+        btn2?.setOnClickListener(this)
+        options?.setOnClickListener(this)
+
+        apiClient = GoogleApiClient.Builder(this)
+                .addApi(Games.API)
+                .addScope(Games.SCOPE_GAMES)
+                .enableAutoManage(this) {
+                    Log.e(TAG, "Could not connect to Play games services")
+                    finish()
+                }.build()
     }
+
 
 
 
     override fun onClick(p0: View?) {
-        if (Btn0 === p0)
+        if (btn0 === p0)
             this.launchGameActivityWithDifficulty(0)
-        if (Btn1 === p0)
+        if (btn1 === p0)
             this.launchGameActivityWithDifficulty(1)
-        if (Btn2 === p0)
+        if (btn2 === p0)
             this.launchGameActivityWithDifficulty(2)
+        if (options === p0){
+
+            val intent = Intent(this,  ScoreAboutActivity::class.java)
+            startActivity(intent)
+            Log.e("LAUNCH","OK")
+        }
     }
 
-    fun launchGameActivityWithDifficulty(d: Int){
+    private fun launchGameActivityWithDifficulty(d: Int){
         //do stuff with difficulty
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra("DIFFICULTY",d)

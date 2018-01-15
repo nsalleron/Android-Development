@@ -3,23 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <android.support.v4.view.ViewPager
-            xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        app:theme="@style/AppTheme"
+        app:navigationIcon="@drawable/ic_launcher_foreground"
+        app:titleTextColor="@color/md_white_1000"
+        app:title="Options"
+        app:popupTheme="@color/colorPrimaryDark"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/colorPrimary"/>
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewpager_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/viewpager_img"
-            android:layout_weight="0.9">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp" />
+    </android.support.v4.view.ViewPager>
 
-            <android.support.v4.view.PagerTitleStrip
-                android:id="@+id/pager_title_strip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp" />
-        </android.support.v4.view.ViewPager>
-
-    </LinearLayout>
+</LinearLayout>
 

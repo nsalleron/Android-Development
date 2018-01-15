@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.util.Log
 
 /**
  * Created by nicolassalleron on 13/01/2018.
@@ -28,8 +29,8 @@ class Adapter constructor(fragmentManager: FragmentManager, ArrayFrag: ArrayList
 
     override fun getPageTitle(position: Int): CharSequence? {    //Titre de chaque fragment
         when (position) {
-            0 -> return "Scores !"
-            1 -> return "About !"
+            0 -> return "Scores"
+            1 -> return "About"
         }
         return null
     }
