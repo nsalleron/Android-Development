@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.util.TypedValue
 import fr.salleron.nicolas.findmycity.R
-import fr.salleron.nicolas.findmycity.adapter.Adapter
+import fr.salleron.nicolas.findmycity.adapter.OptionAdapter
 import fr.salleron.nicolas.findmycity.fragments.AboutFragment
 import fr.salleron.nicolas.findmycity.fragments.ScoreFragment
 import java.util.ArrayList
@@ -31,7 +31,7 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.viewpager)
+        setContentView(R.layout.option_viewpager)
         /* Personnaliser la toobar */
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = "Les options"
@@ -53,8 +53,8 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
         fragments.add(findMyCityAbout)
 
         //Mise en place de l'adaptateur
-        val myPagerAdapter = Adapter(supportFragmentManager, fragments)
-        val myPager = findViewById<ViewPager>(R.id.viewpager_img) as ViewPager
+        val myPagerAdapter = OptionAdapter(supportFragmentManager, fragments)
+        val myPager = findViewById<ViewPager>(R.id.options_viewpager) as ViewPager
         myPager.adapter = myPagerAdapter
 
         //Mise en place des titres

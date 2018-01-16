@@ -9,7 +9,6 @@ import fr.salleron.nicolas.findmycity.R
 import android.util.Log
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.games.Games
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -64,8 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun launchGameActivityWithDifficulty(d: Int){
-        //do stuff with difficulty
-        val intent = Intent(this, GameActivity::class.java).apply {
+        val intent = Intent(this,GameFragmentActivity::class.java).apply {
             putExtra("DIFFICULTY",d)
         }
         startActivity(intent)

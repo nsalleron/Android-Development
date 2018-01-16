@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fr.salleron.nicolas.findmycity.fragments.ScoreFragment">
+
+
+    <com.google.android.gms.maps.StreetViewPanoramaView
+        android:id="@+id/streetviewpanorama"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+    </com.google.android.gms.maps.StreetViewPanoramaView>
+
+    <ImageButton
+        android:id="@+id/imgBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/colorPrimary"
+        android:src="@drawable/ic_arrow_forward_white_24dp" />
+
+
+</RelativeLayout>
