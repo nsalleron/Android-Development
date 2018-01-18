@@ -109,20 +109,17 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
         tvScore = v?.findViewById<TextView>(R.id.tvScore)
 
         /* La list */
-        val fos = activity.openFileInput("_scores.txt").fd
-        val fi = FileReader(fos)
-        val adapter = ListAdapter(activity, R.layout.itemlistrow, fi.readLines())
-        //val adapter = ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,fi.readLines())
-        listAdapter = adapter
-        list?.setOnItemClickListener { adapterView, _, i, l ->
-            Log.e(TAG,"Item : "+i)
-        }
-
-
-
-
-
-
+        try {
+            val fos = activity.openFileInput("_scores.txt").fd
+            val fi = FileReader(fos)
+            val adapter = ListAdapter(activity, R.layout.itemlistrow, fi.readLines())
+            //val adapter = ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,fi.readLines())
+            listAdapter = adapter
+            list?.setOnItemClickListener { adapterView, _, i, l ->
+                Log.e(TAG,"Item : "+i)
+            }
+        }catch (ignored :java.io.FileNotFoundException){ }
+        
         return v
     }
 
