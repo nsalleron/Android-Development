@@ -9,6 +9,9 @@
     <string name="lvl1">Difficulté 2</string>
     <string name="lvl2">Difficulté 3</string>
     <string name="options">Statistiques et à propos</string>
+    <string name="modeNormal">Mode normal</string>
+    <string name="modeGeocoding">Mode pays</string>
+    <string name="modeChrono">Mode Chronomètre</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -32,10 +32,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var apiClient:GoogleApiClient? = null
     private var account = false
     private var internet = false
+    private var networkstate = false
     private var allGood = false
 
     var perms = arrayOf(Manifest.permission.GET_ACCOUNTS,
-            Manifest.permission.INTERNET)
+            Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE)
     val permsRequestCode = 200
 
     @SuppressLint("ObsoleteSdkInt")
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }else{
             account = true
             internet = true
+            networkstate = true
         }
 
         btn0 = findViewById(R.id.lvl0)
@@ -94,11 +96,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         if (btn0 === p0)
-            this.launchGameActivityWithDifficulty(0)
+            this.launchGameActivityWithDifficulty(0,getString(R.string.modeNormal))
         if (btn1 === p0)
-            this.launchGameActivityWithDifficulty(1)
+            this.launchGameActivityWithDifficulty(0,getString(R.string.modeGeocoding))
         if (btn2 === p0)
-            this.launchGameActivityWithDifficulty(2)
+            this.launchGameActivityWithDifficulty(0,getString(R.string.modeChrono))
         if (options === p0){
             val intent = Intent(this,  ScoreAboutActivity::class.java)
             if(allGood){
@@ -125,9 +127,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    private fun launchGameActivityWithDifficulty(d: Int){
+    private fun launchGameActivityWithDifficulty(d: Int, mode : String){
         val intent = Intent(this,GameFragmentActivity::class.java).apply {
             putExtra("DIFFICULTY",d)
+            putExtra("MODE",mode)
         }
         if(allGood){
             startActivity(intent)
@@ -141,8 +144,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (permsRequestCode == permsRequestCode) {
             account = grantResults[0] == PackageManager.PERMISSION_GRANTED
             internet = grantResults[1] == PackageManager.PERMISSION_GRANTED
+            networkstate = grantResults[2] == PackageManager.PERMISSION_GRANTED
         }
-        allGood = account == true && internet == true
+        allGood = account == true && internet == true && networkstate == true
 
     }
 }

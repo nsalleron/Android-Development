@@ -3,7 +3,10 @@ package fr.salleron.nicolas.findmycity.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -68,6 +71,7 @@ class GameFragmentActivity : FragmentActivity(),
     private var mapViewFragment : MapFragment? = null
     private var myPager : ViewPager? = null
     private var gameEnded = false
+    private var mode = ""
 
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +79,8 @@ class GameFragmentActivity : FragmentActivity(),
 
         /* Villes suivant la difficulté */
         currentDifficulty = intent.extras.getInt("DIFFICULTY")
+        mode = intent.extras.getString("MODE")
+
         arrayCity = Difficulty(currentDifficulty).mapData
         @SuppressLint("InflateParams")
         viewNormal = layoutInflater.inflate(R.layout.game_viewpager,null)
@@ -92,7 +98,6 @@ class GameFragmentActivity : FragmentActivity(),
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
 
         /* Ajout des fragments */
-
         mapViewFragment = MapFragment()
         streetViewFragment = StreetFragment()
         Log.e("GameFragmentActivity","EndDeclaration")
@@ -132,6 +137,28 @@ class GameFragmentActivity : FragmentActivity(),
                     finish()
                 }.build()
 
+        if(mode == getString(R.string.modeChrono)){
+            FancyGifDialog.Builder(this)
+                    .setPositiveBtnBackground("#FF4081")
+                    .setPositiveBtnText("Go Go Go !")
+                    .setNegativeBtnText("Accueil")
+                    .isCancellable(false)
+                    .setTitle("Prêt ?")
+                    .setGifResource(R.drawable.gif_8000)
+                    .OnPositiveClicked {
+                        Thread(MyTimer()).start()
+                    }
+                    .OnNegativeClicked {
+                        finish()
+                    }
+                    .build()
+        }
+
+
+
+
+
+
         Snackbar.make(viewNormal!!, "Astuce : "+
                 arrayCity[currentCity].help, Snackbar.LENGTH_LONG)
                 .setDuration(5000)
@@ -142,8 +169,6 @@ class GameFragmentActivity : FragmentActivity(),
             endOfGame()
             return
         }
-
-
 
         /* Ligne entre les deux coordonnées */
         val points = ArrayList<LatLng>()
@@ -168,30 +193,11 @@ class GameFragmentActivity : FragmentActivity(),
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.ic_account_circle_white_24dp)))
 
-        showDialogAndNext(p0)
+        showDialogAndComputeScore(p0)
     }
 
-    private fun showDialogAndNext(p0: LatLng?) {
+    private fun showDialogAndComputeScore(p0: LatLng?) {
         Log.e(TAG,"Current level of difficulty : "+ (currentDifficulty))
-        val distanceBeetweenMarker = floatArrayOf(1F)
-        Location.distanceBetween(
-                arrayCity[currentCity].lat!!,
-                arrayCity[currentCity].lng!!,
-                p0!!.latitude,
-                p0.longitude,
-                distanceBeetweenMarker)
-
-        /* Update du score */
-        val score = currentLvl + currentScore
-        currentScore = 0
-        Log.e(TAG,"CurrentScore :" + currentLvl )
-        if(apiClient!!.isConnected){
-            Games.Leaderboards.submitScore(apiClient,
-                    getString(R.string.leaderboard_classement_test_1),
-                    score.toLong()) //le score augmentait trop vite
-        }
-
-
 
         val dialog = FancyGifDialog.Builder(this@GameFragmentActivity)
                 .setPositiveBtnBackground("#FF4081")
@@ -199,18 +205,14 @@ class GameFragmentActivity : FragmentActivity(),
                 .setNegativeBtnText("Mon score !")
                 .isCancellable(false)
 
-        val kilometer = Math.ceil((distanceBeetweenMarker[0] / 1000).toDouble())
-
-        giveMeGifAndTitle(kilometer, dialog)
+        giveMeGifAndTitle(dialog,p0!!.latitude, p0.longitude)
 
         dialog.OnPositiveClicked {
-
             currentCity += 1
-
             /* Changement de niveau */
             if (currentCity > (arrayCity.size + (-1))) {
 
-                if ((currentDifficulty + 1) > 2) {
+                if ((currentDifficulty + 1) > 2) {  //Fin de niveau
                     endOfGame()
                 } else {    /* Passage au niveau suivant */
                     FancyGifDialog.Builder(this)
@@ -287,24 +289,47 @@ class GameFragmentActivity : FragmentActivity(),
     }
 
     private fun endOfGame() {
-        FancyGifDialog.Builder(this)
-                .setPositiveBtnBackground("#FF4081")
-                .setPositiveBtnText("Accueil")
-                .setNegativeBtnText("Partagez !")
-                .isCancellable(false)
-                .setTitle("Vous avez fini mon jeu ! :)")
-                .setGifResource(R.drawable.gif_firework)   //Pass your Gif here
-                .OnPositiveClicked {
-                    finish()
-                }
-                .OnNegativeClicked {
-                    val sendIntent = Intent()
-                    sendIntent.action = Intent.ACTION_SEND
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé "+currentScore + " sur "+R.string.app_name)
-                    sendIntent.type = "text/plain"
-                    startActivity(sendIntent)
-                }
-                .build()
+        if (mode == getString(R.string.modeChrono)){
+            FancyGifDialog.Builder(this)
+                    .setPositiveBtnBackground("#FF4081")
+                    .setPositiveBtnText("Accueil")
+                    .setNegativeBtnText("Partager !")
+                    .isCancellable(false)
+                    .setTitle("C'est fini, score : $currentScore !")
+                    .setGifResource(R.drawable.gif_firework)
+                    .OnPositiveClicked {
+                        finish()
+                    }
+                    .OnNegativeClicked {
+                        val sendIntent = Intent()
+                        sendIntent.action = Intent.ACTION_SEND
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé un score de "+currentScore + " sur "+getString(R.string.app_name))
+                        sendIntent.type = "text/plain"
+                        startActivity(sendIntent)
+                    }
+                    .build()
+        }else{
+            FancyGifDialog.Builder(this)
+                    .setPositiveBtnBackground("#FF4081")
+                    .setPositiveBtnText("Accueil")
+                    .setNegativeBtnText("Partager !")
+                    .isCancellable(false)
+                    .setTitle("Vous avez fini mon jeu ! :)")
+                    .setGifResource(R.drawable.gif_firework)   //Pass your Gif here
+                    .OnPositiveClicked {
+                        finish()
+                    }
+                    .OnNegativeClicked {
+                        val sendIntent = Intent()
+                        sendIntent.action = Intent.ACTION_SEND
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé "+currentScore + " sur "+R.string.app_name)
+                        sendIntent.type = "text/plain"
+                        startActivity(sendIntent)
+                    }
+                    .build()
+        }
+
+
     }
 
     private fun showLeaderboard() {
@@ -325,56 +350,142 @@ class GameFragmentActivity : FragmentActivity(),
         myPager?.setCurrentItem(1,true)
     }
 
-    private fun giveMeGifAndTitle(kilometer: Double, dialog: FancyGifDialog.Builder) {
-        if (kilometer <= 50) {                                  //valide
-            dialog.setTitle("Incroyable! \nTu vois de loin !\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_0)
-        } else if (kilometer > 50 && kilometer <= 300) {        //valide
-            dialog.setTitle("Bravo ! \nTu es super fort !\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_50)
-        } else if (kilometer > 300 && kilometer <= 1000) {      //valide
-            dialog.setTitle("Dommage !\nTu feras mieux la prochaine fois !\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_300)
-        }else if (kilometer > 1000 && kilometer <= 2000) {      //valide
-            dialog.setTitle("Arf !\nOn y était presque pourtant !\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_1000)
-        } else if (kilometer > 2000 && kilometer <= 4000) {     //valide
-            dialog.setTitle("Encore de la route!\nCourage!\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_2000)
-        } else if (kilometer > 4000 && kilometer <= 8000) {     //valide
-            dialog.setTitle("Heu...\nOn est ou là?!\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_4000)
-        } else if (kilometer > 8000 && kilometer <= 16000) {    //valide
-            dialog.setTitle("Ouah!\nTu es encore un peu loin\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_8000)
-        } else if (kilometer > 16000) {   //valide
-            dialog.setTitle("Whut !\nTu es trop loin !\n" +
-                    kilometer +
-                    " km de l'objectif\n" +
-                    "C'était : " + arrayCity[currentCity].name)
-            dialog.setGifResource(R.drawable.gif_16000)
+    private fun giveMeGifAndTitle(dialog: FancyGifDialog.Builder,lat : Double, lng : Double) {
+
+        var pointReponse = 0
+        if(mode == getString(R.string.modeNormal) || mode == getString(R.string.modeChrono)){
+
+            val distanceBeetweenMarker = floatArrayOf(1F)
+            Location.distanceBetween(
+                    arrayCity[currentCity].lat!!,
+                    arrayCity[currentCity].lng!!,
+                    lat,
+                    lng,
+                    distanceBeetweenMarker)
+            val kilometer = Math.ceil((distanceBeetweenMarker[0] / 1000).toDouble())
+
+            if (kilometer <= 50) {                                  //valide
+                dialog.setTitle("Incroyable! \nTu vois de loin !\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_0)
+                pointReponse = 10
+            } else if (kilometer > 50 && kilometer <= 300) {        //valide
+                dialog.setTitle("Bravo ! \nTu es super fort !\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_50)
+                pointReponse = 8
+            } else if (kilometer > 300 && kilometer <= 1000) {      //valide
+                dialog.setTitle("Dommage !\nTu feras mieux la prochaine fois !\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_300)
+                pointReponse = 6
+            }else if (kilometer > 1000 && kilometer <= 2000) {      //valide
+                dialog.setTitle("Arf !\nOn y était presque pourtant !\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_1000)
+                pointReponse = 4
+            } else if (kilometer > 2000 && kilometer <= 4000) {     //valide
+                dialog.setTitle("Encore de la route!\nCourage!\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_2000)
+                pointReponse = 3
+            } else if (kilometer > 4000 && kilometer <= 8000) {     //valide
+                dialog.setTitle("Heu...\nOn est ou là?!\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_4000)
+                pointReponse = 2
+            } else if (kilometer > 8000 && kilometer <= 16000) {    //valide
+                dialog.setTitle("Ouah!\nTu es encore un peu loin\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_8000)
+                pointReponse = 1
+            } else if (kilometer > 16000) {   //valide
+                dialog.setTitle("Whut !\nTu es trop loin !\n" +
+                        kilometer +
+                        " km de l'objectif\n" +
+                        "C'était : " + arrayCity[currentCity].name)
+                dialog.setGifResource(R.drawable.gif_16000)
+                pointReponse = 0
+            }
+        }else{
+            val country = getCountry(lat,lng)
+            Log.e(TAG,"pour element : "+currentCity +" = "+country);
+            if (country == arrayCity[currentCity].country) {
+                dialog.setTitle("Incroyable! \nBien joué !\n" +
+                        "C'était bien : " + arrayCity[currentCity].country)
+                dialog.setGifResource(R.drawable.gif_0)
+                pointReponse = 7
+            } else  {        //valide
+                dialog.setTitle("Dommage  \nUne prochaine fois !\n" +
+                        "C'était : " + arrayCity[currentCity].country)
+                dialog.setGifResource(R.drawable.gif_4000)
+                pointReponse = 4
+            }
+
         }
+
+        /* Update du score */
+        currentScore = currentScore + currentLvl + currentCity + pointReponse //Progression niveau et étape dans le niveau
+        Log.e(TAG,"CurrentScore :" + currentLvl )
+        if(apiClient!!.isConnected){
+            Games.Leaderboards.submitScore(apiClient,
+                    getString(R.string.leaderboard_classement_test_1),
+                    currentScore.toLong()) //le score augmentait trop vite avec les km
+        }
+
+
+    }
+
+    fun getCountry(lat: Double, lng : Double) : String{
+
+        if(isNetworkAvailable()){
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(lat,lng,1)
+            if(addresses.size != 0)
+                return addresses.get(0).countryName
+            else
+                return "même pas un pays ! :O"
+        }else{
+            return "ERROR: Internet non disponible"
+        }
+
+    }
+
+    inner class MyTimer : java.lang.Runnable {
+
+        override fun run() {
+            this.runTimer()
+        }
+
+        fun runTimer() {
+            var i = 60 * 5
+            while (i > 0) {
+                runOnUiThread {
+                    findViewById<Toolbar>(R.id.toolbar).title = "Chrono : $i secondes !"
+                }
+                try {
+                    i--
+                    Thread.sleep(1000L)
+                } catch (ignored: InterruptedException) { }
+
+            }
+            endOfGame()
+        }
+
     }
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -382,8 +493,6 @@ class GameFragmentActivity : FragmentActivity(),
     }
 
     override fun onStreetViewPanoramaChange(p0: StreetViewPanoramaLocation?) {
-        currentScore += 1
-
     }
 
     override fun onConnectionSuspended(p0: Int) {
@@ -401,6 +510,12 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    private fun isNetworkAvailable() : Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -410,7 +525,7 @@ class GameFragmentActivity : FragmentActivity(),
         val date = Date()
         //Flemme de chercher nouvelle API
         @Suppress("DEPRECATION")
-        pw.println(""+currentScore+";"+currentLvl+";"+ date.day +"/" +(date.month+1)
+        pw.println(""+(currentDifficulty+1)+";"+currentScore+";"+ date.date +"/" +(date.month+1)
                 +"/"+(date.year+1900)+ " à "+date.hours+":"+date.minutes+":"+date.seconds+";"+currentPlayer)
         Log.e(TAG, "Errors ? : " + pw.checkError())
         pw.close()
