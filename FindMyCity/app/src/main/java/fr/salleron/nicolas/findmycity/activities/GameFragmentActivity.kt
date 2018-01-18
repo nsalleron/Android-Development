@@ -18,6 +18,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.games.Games
 import com.google.android.gms.maps.*
@@ -29,8 +30,6 @@ import fr.salleron.nicolas.findmycity.data.City
 import fr.salleron.nicolas.findmycity.data.Difficulty
 import fr.salleron.nicolas.findmycity.fragments.MapFragment
 import fr.salleron.nicolas.findmycity.fragments.StreetFragment
-import java.io.File
-import java.io.FileOutputStream
 import java.io.FileReader
 import java.io.PrintWriter
 import java.util.*
@@ -185,9 +184,12 @@ class GameFragmentActivity : FragmentActivity(),
         val score = currentLvl + currentScore
         currentScore = 0
         Log.e(TAG,"CurrentScore :" + currentLvl )
-        Games.Leaderboards.submitScore(apiClient,
-                getString(R.string.leaderboard_classement_test_1),
-                score.toLong()) //le score augmentait trop vite
+        if(apiClient!!.isConnected){
+            Games.Leaderboards.submitScore(apiClient,
+                    getString(R.string.leaderboard_classement_test_1),
+                    score.toLong()) //le score augmentait trop vite
+        }
+
 
 
         val dialog = FancyGifDialog.Builder(this@GameFragmentActivity)
@@ -264,6 +266,8 @@ class GameFragmentActivity : FragmentActivity(),
 
 
     private fun unlockAchievements() {
+        if(!apiClient!!.isConnected)
+            return
         currentLvl += 1
         when (currentLvl) {
             1 -> Games.Achievements
@@ -303,9 +307,12 @@ class GameFragmentActivity : FragmentActivity(),
     }
 
     private fun showLeaderboard() {
-        startActivityForResult(
+        if(apiClient!!.isConnected)
+             startActivityForResult(
                 Games.Leaderboards.getLeaderboardIntent(apiClient,
                         getString(R.string.leaderboard_classement_test_1)), 0)
+        else
+            Toast.makeText(this,"Connexion à internet impossible",Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -401,6 +408,7 @@ class GameFragmentActivity : FragmentActivity(),
         //Log.e(TAG, ""+currentLvl+";"+currentScore+";"+ Date().toString()+"\n")
         val date = Date()
         //Flemme de chercher nouvelle API
+        @Suppress("DEPRECATION")
         pw.println(""+currentScore+";"+currentLvl+";"+ date.day +"/" +(date.month+1)
                 +"/"+(date.year+1900)+ " à "+date.hours+":"+date.minutes+":"+date.seconds+";"+currentPlayer)
         Log.e(TAG, "Errors ? : " + pw.checkError())

@@ -72,12 +72,21 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
         btnShowScore =  v?.findViewById<Button>(R.id.btnScoreFragmentScore)
         btnShowScore?.setOnClickListener {
-            showLeaderboard()
+            if(apiClient!!.isConnected){
+                showLeaderboard()
+            }else{
+                Toast.makeText(activity,"Je n'arrive pas à récupérer vos résultats...",Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         btnShowAchievement = v?.findViewById(R.id.btnAchievementFragmentScore)
         btnShowAchievement?.setOnClickListener {
-            showAchievements()
+            if(apiClient!!.isConnected){
+                showAchievements()
+             }else{
+               Toast.makeText(activity,"Je n'arrive pas à récupérer vos résultats...",Toast.LENGTH_SHORT).show()
+            }
         }
 
         btnModificationProfil = v?.findViewById(R.id.btnModificationProfileFragmentScore)
