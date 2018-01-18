@@ -1,14 +1,36 @@
 package fr.salleron.nicolas.findmycity.fragments
 
 import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.Drawable
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.ListFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.common.api.GoogleApiClient
 
 import fr.salleron.nicolas.findmycity.R
+import com.google.android.gms.games.Games
+import android.provider.MediaStore
+import com.google.android.gms.common.images.ImageManager
+import com.squareup.picasso.Picasso
+import com.google.android.gms.tasks.Task
+import android.support.annotation.NonNull
+import android.widget.*
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
+import com.google.android.gms.tasks.OnCompleteListener
+import com.squareup.picasso.Transformation
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog
+import fr.salleron.nicolas.findmycity.data.ListAdapter
+import java.io.*
+import java.util.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -18,32 +40,105 @@ import fr.salleron.nicolas.findmycity.R
  * Use the [ScoreFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ScoreFragment : Fragment() {
+class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
 
     private var mListener: OnFragmentInteractionListener? = null
+    var apiClient: GoogleApiClient? = null
+    var btnShowScore : Button? = null
+    var btnShowAchievement : Button? = null
+    var btnModificationProfil : Button? = null
+    var imgUser : ImageView? = null
+    var list : ListView? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
-        }
-    }
+    private val TAG = "ScoreFragment"
+
+    private var tvScore: TextView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater?.inflate(R.layout.fragment_score, container, false)
+        val v = inflater?.inflate(R.layout.fragment_score, container, false)
+        /* API Client Game */
+        apiClient = GoogleApiClient.Builder(activity)
+                .addApi(Games.API)
+                .addScope(Games.SCOPE_GAMES)
+                .addConnectionCallbacks(this)
+                .enableAutoManage(activity) {
+                    Log.e(TAG, "Could not connect to Play games services")
+                    activity.finish()
+                }.build()
+
+
+
+        btnShowScore =  v?.findViewById<Button>(R.id.btnScoreFragmentScore)
+        btnShowScore?.setOnClickListener {
+            showLeaderboard()
+        }
+
+        btnShowAchievement = v?.findViewById(R.id.btnAchievementFragmentScore)
+        btnShowAchievement?.setOnClickListener {
+            showAchievements()
+        }
+
+        btnModificationProfil = v?.findViewById(R.id.btnModificationProfileFragmentScore)
+        btnModificationProfil?.setOnClickListener {
+            LovelyTextInputDialog(activity,R.style.TintTheme)
+                    .setTopColor(resources.getColor(R.color.colorPrimary))
+                    .setTitle("Votre nouveau pseudo")
+                    .setMessage("Quel est votre nouvel pseudo?")
+                    .setIcon(R.drawable.ic_launcher_foreground)
+                    .setConfirmButton(android.R.string.ok, LovelyTextInputDialog.OnTextInputConfirmListener {
+                        text ->
+                        if(text.length != 0){
+
+                            val dir = activity.filesDir
+                            File(dir,"_options.txt").delete()
+                            val fos = activity.openFileOutput("_options.txt",Context.MODE_APPEND)
+                            val pw = PrintWriter(fos)
+                            pw.println(text)
+                            tvScore?.text = text
+                            pw.close()
+                        }
+
+                    }).show()
+
+        }
+
+
+        imgUser = v?.findViewById(R.id.profile)
+        tvScore = v?.findViewById<TextView>(R.id.tvScore)
+
+        /* La list */
+        val fos = activity.openFileInput("_scores.txt").fd
+        val fi = FileReader(fos)
+        val adapter = ListAdapter(activity, R.layout.itemlistrow, fi.readLines())
+        //val adapter = ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,fi.readLines())
+        listAdapter = adapter
+        list?.setOnItemClickListener { adapterView, _, i, l ->
+            Log.e(TAG,"Item : "+i)
+        }
+
+
+
+
+
+
+        return v
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
+
+    fun showAchievements() {
+        startActivityForResult(
+                Games.Achievements
+                        .getAchievementsIntent(apiClient),
+                1
+        )
+    }
+
+    fun showLeaderboard() {
+        startActivityForResult(
+                Games.Leaderboards.getLeaderboardIntent(apiClient,
+                        getString(R.string.leaderboard_classement_test_1)), 0)
     }
 
     override fun onAttach(context: Context) {
@@ -74,28 +169,30 @@ class ScoreFragment : Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
+    override fun onConnectionSuspended(p0: Int) {
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ScoreFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): ScoreFragment {
-            val fragment = ScoreFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
-}// Required empty public constructor
+
+    override fun onConnected(p0: Bundle?) {
+        val fos = activity.openFileInput("_options.txt")
+        val fi = FileReader(fos.fd)
+        try {
+            tvScore?.text = fi.readLines()[0]
+        }catch (e : Exception){
+            tvScore?.text = Games.Players.getCurrentPlayer(apiClient).displayName
+        }
+
+        ImageManager.create(activity).
+                loadImage(imgUser,Games.Players.getCurrentPlayer(apiClient).iconImageUri)
+
+        YoYo.with(Techniques.ZoomIn)
+                .duration(700)
+                .playOn(imgUser)
+        YoYo.with(Techniques.FadeIn)
+                .duration(700)
+                .playOn(tvScore)
+
+    }
+
+}//Required empty public constructor
+

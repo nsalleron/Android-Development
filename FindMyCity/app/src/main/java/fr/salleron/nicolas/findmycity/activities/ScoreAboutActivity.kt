@@ -18,7 +18,8 @@ import fr.salleron.nicolas.findmycity.fragments.ScoreFragment
 import java.util.ArrayList
 import android.support.v4.content.ContextCompat
 import android.view.WindowManager
-
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.games.Games
 
 
 /**
@@ -26,12 +27,14 @@ import android.view.WindowManager
 */
 class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener {
 
-
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.option_viewpager)
+
+
+
         /* Personnaliser la toobar */
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = "Les options"
@@ -44,7 +47,6 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
 
         /* Ajout des fragments */
-
         val monScore = ScoreFragment()
         val findMyCityAbout = AboutFragment()
         val fragments = ArrayList<Fragment>()
@@ -66,6 +68,7 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
             pts.setTextColor(resources.getColor(R.color.colorAccent,theme))
         pts.textSpacing = 200
         Log.e("TAG","END OK")
+
     }
 
     override fun onFragmentInteraction(uri: Uri) {

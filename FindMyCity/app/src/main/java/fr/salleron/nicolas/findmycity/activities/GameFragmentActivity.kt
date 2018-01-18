@@ -1,6 +1,7 @@
 package fr.salleron.nicolas.findmycity.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
@@ -28,7 +29,11 @@ import fr.salleron.nicolas.findmycity.data.City
 import fr.salleron.nicolas.findmycity.data.Difficulty
 import fr.salleron.nicolas.findmycity.fragments.MapFragment
 import fr.salleron.nicolas.findmycity.fragments.StreetFragment
-import java.util.ArrayList
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileReader
+import java.io.PrintWriter
+import java.util.*
 
 /**
 * Created by nicolassalleron on 15/01/2018.
@@ -37,10 +42,10 @@ class GameFragmentActivity : FragmentActivity(),
         StreetFragment.OnFragmentInteractionListener,
         MapFragment.OnFragmentInteractionListener,
         GoogleMap.OnMapClickListener,
-        StreetViewPanorama.OnStreetViewPanoramaChangeListener {
+        StreetViewPanorama.OnStreetViewPanoramaChangeListener,GoogleApiClient.ConnectionCallbacks{
 
     @Suppress("PrivatePropertyName")
-    private val TAG = "OLD_GameActivity"
+    private val TAG = "GameFragmentActivity"
     private var viewNormal: View? = null
     lateinit var arrayCity : ArrayList<City>
     private var currentCity = 0
@@ -48,6 +53,7 @@ class GameFragmentActivity : FragmentActivity(),
     private var currentDifficulty: Int = 0
     private var currentLvl : Int = 0
     private var currentScore : Int = 0
+    private var currentPlayer : String = ""
     private val arrayColor = intArrayOf(R.color.md_red_800, R.color.md_pink_800,
             R.color.md_purple_800, R.color.md_deep_purple_800, R.color.md_indigo_800,
             R.color.md_blue_800, R.color.md_light_blue_800, R.color.md_cyan_800,
@@ -120,6 +126,7 @@ class GameFragmentActivity : FragmentActivity(),
         apiClient = GoogleApiClient.Builder(this)
                 .addApi(Games.API)
                 .addScope(Games.SCOPE_GAMES)
+                .addConnectionCallbacks(this)
                 .enableAutoManage(this) {
                     Log.e(TAG, "Could not connect to Play games services")
                     finish()
@@ -278,14 +285,20 @@ class GameFragmentActivity : FragmentActivity(),
         FancyGifDialog.Builder(this)
                 .setPositiveBtnBackground("#FF4081")
                 .setPositiveBtnText("Accueil")
-                .setNegativeBtnText("Carte")
+                .setNegativeBtnText("Partagez !")
                 .isCancellable(false)
                 .setTitle("Vous avez fini mon jeu ! :)")
                 .setGifResource(R.drawable.gif_firework)   //Pass your Gif here
                 .OnPositiveClicked {
                     finish()
                 }
-                .OnNegativeClicked {gameEnded = true}
+                .OnNegativeClicked {
+                    val sendIntent = Intent()
+                    sendIntent.action = Intent.ACTION_SEND
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé "+currentScore + " sur "+R.string.app_name)
+                    sendIntent.type = "text/plain"
+                    startActivity(sendIntent)
+                }
                 .build()
     }
 
@@ -365,5 +378,33 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
+
+    override fun onConnected(p0: Bundle?) {
+        val fos = openFileInput("_options.txt")
+        val fi = FileReader(fos.fd)
+        try {
+            currentPlayer = fi.readLines()[0]
+        }catch (e : Exception){
+            currentPlayer = Games.Players.getCurrentPlayer(apiClient).displayName
+        }
+
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val fos = openFileOutput("_scores.txt",Context.MODE_APPEND)
+        val pw = PrintWriter(fos)
+        //Log.e(TAG, ""+currentLvl+";"+currentScore+";"+ Date().toString()+"\n")
+        val date = Date()
+        //Flemme de chercher nouvelle API
+        pw.println(""+currentScore+";"+currentLvl+";"+ date.day +"/" +date.month
+                +"/"+(date.year+1900)+ " à "+date.hours+":"+date.minutes+":"+date.seconds+";"+currentPlayer)
+        Log.e(TAG, "Errors ? : " + pw.checkError())
+        pw.close()
+    }
 
 }

@@ -1,11 +1,112 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    tools:context="fr.salleron.nicolas.findmycity.fragments.ScoreFragment">
+ <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+     <ListView
+         android:id="@android:id/list"
+         android:layout_width="386dp"
+         android:layout_height="400dp"
+         android:layout_marginBottom="8dp"
+         android:layout_marginEnd="8dp"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="8dp"
+         android:layout_weight="1"
+         android:drawSelectorOnTop="false"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/tvScore" />
 
 
 
+     <ImageView
+         android:id="@+id/imageView2"
+         android:layout_width="141dp"
+         android:layout_height="119dp"
+         android:layout_marginEnd="8dp"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="16dp"
+         android:src="@drawable/trophy"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.088"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+     <TextView
+         android:id="@+id/tvScore"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="8dp"
+         android:layout_marginStart="8dp"
+         android:text="Score : 100000000"
+         app:layout_constraintEnd_toEndOf="@+id/imageView2"
+         app:layout_constraintStart_toStartOf="@+id/imageView2"
+         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+     <Button
+         android:id="@+id/btnAchievementFragmentScore"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="8dp"
+         android:layout_marginEnd="8dp"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="8dp"
+         android:text="EXPLOITS"
+         app:layout_constraintBottom_toTopOf="@+id/tvScore"
+         app:layout_constraintHorizontal_bias="0.357"
+         app:layout_constraintStart_toEndOf="@+id/imageView2"
+         app:layout_constraintTop_toTopOf="@+id/imageView2"
+         app:layout_constraintVertical_bias="0.0"
+          />
+
+     <Button
+         android:id="@+id/btnScoreFragmentScore"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="8dp"
+         android:layout_marginEnd="16dp"
+         android:layout_marginTop="8dp"
+         android:text="SCORES"
+         app:layout_constraintBottom_toTopOf="@+id/tvScore"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toTopOf="@+id/imageView2"
+         app:layout_constraintVertical_bias="0.0" />
+
+     <Button
+         android:id="@+id/btnModificationProfileFragmentScore"
+         android:layout_width="186dp"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="8dp"
+         android:layout_marginEnd="8dp"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="8dp"
+         android:text="Modification profil"
+         app:layout_constraintBottom_toBottomOf="@+id/tvScore"
+
+         app:layout_constraintStart_toStartOf="@+id/btnAchievementFragmentScore"
+         app:layout_constraintTop_toBottomOf="@+id/btnAchievementFragmentScore"
+         app:layout_constraintVertical_bias="0.388"
+          />
+
+      <ImageView
+          android:id="@+id/profile"
+          android:layout_width="36dp"
+          android:layout_height="31dp"
+          android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="8dp"
+          app:layout_constraintBottom_toTopOf="@+id/tvScore"
+          app:layout_constraintEnd_toEndOf="@+id/imageView2"
+          app:layout_constraintHorizontal_bias="0.505"
+          app:layout_constraintStart_toStartOf="@+id/imageView2"
+          app:layout_constraintTop_toTopOf="@+id/imageView2"
+          app:layout_constraintVertical_bias="0.111"
+          app:srcCompat="@drawable/ic_account_circle_white_24dp" />
+
+
+ </android.support.constraint.ConstraintLayout>
+
