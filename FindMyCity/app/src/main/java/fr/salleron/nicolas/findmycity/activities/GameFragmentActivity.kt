@@ -401,7 +401,7 @@ class GameFragmentActivity : FragmentActivity(),
         //Log.e(TAG, ""+currentLvl+";"+currentScore+";"+ Date().toString()+"\n")
         val date = Date()
         //Flemme de chercher nouvelle API
-        pw.println(""+currentScore+";"+currentLvl+";"+ date.day +"/" +date.month
+        pw.println(""+currentScore+";"+currentLvl+";"+ date.day +"/" +(date.month+1)
                 +"/"+(date.year+1900)+ " à "+date.hours+":"+date.minutes+":"+date.seconds+";"+currentPlayer)
         Log.e(TAG, "Errors ? : " + pw.checkError())
         pw.close()

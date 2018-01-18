@@ -35,6 +35,7 @@ class ListAdapter : ArrayAdapter<String> {
         if (p != null) {
             val tt1 = v!!.findViewById<TextView>(R.id.score)
             val tt2 = v.findViewById<TextView>(R.id.date)
+            val tt3 = v.findViewById<TextView>(R.id.joueur)
             val tmp = p.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (tt1 != null) {
                 tt1.text = "Niveau : "+tmp[0] + "\nScore  : " +tmp[1]
@@ -42,8 +43,8 @@ class ListAdapter : ArrayAdapter<String> {
             if (tt2 != null) {
                 tt2.text = tmp[2]
             }
-            if (tt2 != null) {
-                tt2.text = "Joueur : " + tmp[3]
+            if (tt3 != null) {
+                tt3.text = "Joueur : " + tmp[3]
             }
         }
 
