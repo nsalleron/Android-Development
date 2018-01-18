@@ -133,6 +133,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
     }
 
 
+
     fun showAchievements() {
         startActivityForResult(
                 Games.Achievements

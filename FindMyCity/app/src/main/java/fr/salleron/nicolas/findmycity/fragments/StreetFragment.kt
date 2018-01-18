@@ -71,6 +71,7 @@ class StreetFragment : Fragment() {
         }
     }
 
+
     override fun onDetach() {
         super.onDetach()
         mListener = null
