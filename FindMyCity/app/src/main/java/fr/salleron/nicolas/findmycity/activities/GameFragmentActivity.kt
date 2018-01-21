@@ -6,16 +6,14 @@ import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.PagerTitleStrip
+import android.support.v4.view.PagerTabStrip
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -25,7 +23,9 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.games.Games
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.StreetViewPanorama
 import com.google.android.gms.maps.model.*
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog
 import fr.salleron.nicolas.findmycity.R
@@ -73,7 +73,9 @@ class GameFragmentActivity : FragmentActivity(),
     private var gameEnded = false
     private var mode = ""
 
-    @SuppressLint("ObsoleteSdkInt")
+
+
+    @SuppressLint("ObsoleteSdkInt", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,14 +84,20 @@ class GameFragmentActivity : FragmentActivity(),
         mode = intent.extras.getString("MODE")
 
         arrayCity = Difficulty(currentDifficulty).mapData
-        @SuppressLint("InflateParams")
-        viewNormal = layoutInflater.inflate(R.layout.game_viewpager,null)
+
+        viewNormal = layoutInflater.inflate(R.layout.game_viewpager, null)
         setContentView(viewNormal)
 
+
         /* Personnaliser la toobar */
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar) as Toolbar
         toolbar.title = "FindMyCity"
-        toolbar.setTitleTextColor(resources.getColor(R.color.md_white_1000,theme))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            toolbar.setTitleTextColor(resources.getColor(R.color.md_white_1000,theme))
+        }else{
+            @Suppress("DEPRECATION")
+            toolbar.setTitleTextColor(resources.getColor(R.color.md_white_1000))
+        }
 
         /* Changer la couleur de la status bar */
         val window = window
@@ -117,15 +125,14 @@ class GameFragmentActivity : FragmentActivity(),
         myPager?.adapter = myPagerAdapter
 
         //Mise en place des titres
-        val pts = findViewById<PagerTitleStrip>(R.id.pager_title_strip) as PagerTitleStrip
+        val pts = findViewById<PagerTabStrip>(R.id.pager_title_strip) as PagerTabStrip
         pts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pts.setTextColor(getColor(R.color.colorPrimary))
-        } else
-            pts.setTextColor(resources.getColor(R.color.colorPrimary,theme))
+        @Suppress("DEPRECATION")
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> pts.setTextColor(resources.getColor(R.color.colorPrimary,theme))
+            else -> pts.setTextColor(resources.getColor(R.color.colorPrimary))
+        }
         pts.textSpacing = 200
-
-
 
         /* play services */
         apiClient = GoogleApiClient.Builder(this)
@@ -153,11 +160,6 @@ class GameFragmentActivity : FragmentActivity(),
                     }
                     .build()
         }
-
-
-
-
-
 
         Snackbar.make(viewNormal!!, "Astuce : "+
                 arrayCity[currentCity].help, Snackbar.LENGTH_LONG)
@@ -423,23 +425,23 @@ class GameFragmentActivity : FragmentActivity(),
             }
         }else{
             val country = getCountry(lat,lng)
-            Log.e(TAG,"pour element : "+currentCity +" = "+country);
-            if (country == arrayCity[currentCity].country) {
+            Log.e(TAG, "pour element : $currentCity = $country")
+            pointReponse = if (country == arrayCity[currentCity].country) {
                 dialog.setTitle("Incroyable! \nBien joué !\n" +
                         "C'était bien : " + arrayCity[currentCity].country)
                 dialog.setGifResource(R.drawable.gif_0)
-                pointReponse = 7
+                7
             } else  {        //valide
                 dialog.setTitle("Dommage  \nUne prochaine fois !\n" +
                         "C'était : " + arrayCity[currentCity].country)
                 dialog.setGifResource(R.drawable.gif_4000)
-                pointReponse = 4
+                4
             }
 
         }
 
         /* Update du score */
-        currentScore = currentScore + currentLvl + currentCity + pointReponse //Progression niveau et étape dans le niveau
+        currentScore += currentLvl + currentCity + pointReponse //Progression niveau et étape dans le niveau
         Log.e(TAG,"CurrentScore :" + currentLvl )
         if(apiClient!!.isConnected){
             Games.Leaderboards.submitScore(apiClient,
@@ -450,17 +452,17 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
-    fun getCountry(lat: Double, lng : Double) : String{
+    private fun getCountry(lat: Double, lng : Double) : String{
 
-        if(isNetworkAvailable()){
+        return if(isNetworkAvailable()){
             val geocoder = Geocoder(this, Locale.getDefault())
             val addresses = geocoder.getFromLocation(lat,lng,1)
             if(addresses.size != 0)
-                return addresses.get(0).countryName
+                addresses[0].countryName
             else
-                return "même pas un pays ! :O"
+                "même pas un pays ! :O"
         }else{
-            return "ERROR: Internet non disponible"
+            "ERROR: Internet non disponible"
         }
 
     }
@@ -471,7 +473,7 @@ class GameFragmentActivity : FragmentActivity(),
             this.runTimer()
         }
 
-        fun runTimer() {
+        private fun runTimer() {
             var i = 60 * 5
             while (i > 0) {
                 runOnUiThread {
@@ -502,10 +504,10 @@ class GameFragmentActivity : FragmentActivity(),
     override fun onConnected(p0: Bundle?) {
         val fos = openFileInput("_options.txt")
         val fi = FileReader(fos.fd)
-        try {
-            currentPlayer = fi.readLines()[0]
+        currentPlayer = try {
+            fi.readLines()[0]
         }catch (e : Exception){
-            currentPlayer = Games.Players.getCurrentPlayer(apiClient).displayName
+            Games.Players.getCurrentPlayer(apiClient).displayName
         }
 
     }

@@ -1,8 +1,7 @@
- <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto"
-     xmlns:tools="http://schemas.android.com/tools"
-     android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
      <ListView
@@ -15,6 +14,7 @@
          android:layout_marginTop="8dp"
          android:layout_weight="1"
          android:drawSelectorOnTop="false"
+         android:background="@drawable/border_listview"
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +30,7 @@
          android:layout_marginStart="8dp"
          android:layout_marginTop="16dp"
          android:src="@drawable/trophy"
+         android:contentDescription="@string/app_name"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintHorizontal_bias="0.088"
          app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
          android:layout_height="wrap_content"
          android:layout_marginEnd="8dp"
          android:layout_marginStart="8dp"
-         android:text="Score : 100000000"
+         android:text="@string/score_100000000"
          app:layout_constraintEnd_toEndOf="@+id/imageView2"
          app:layout_constraintStart_toStartOf="@+id/imageView2"
          app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -54,7 +55,7 @@
          android:layout_marginEnd="8dp"
          android:layout_marginStart="8dp"
          android:layout_marginTop="8dp"
-         android:text="EXPLOITS"
+         android:text="@string/exploits"
          app:layout_constraintBottom_toTopOf="@+id/tvScore"
          app:layout_constraintHorizontal_bias="0.357"
          app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -69,7 +70,7 @@
          android:layout_marginBottom="8dp"
          android:layout_marginEnd="16dp"
          android:layout_marginTop="8dp"
-         android:text="SCORES"
+         android:text="@string/scores"
          app:layout_constraintBottom_toTopOf="@+id/tvScore"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintTop_toTopOf="@+id/imageView2"
@@ -83,7 +84,7 @@
          android:layout_marginEnd="8dp"
          android:layout_marginStart="8dp"
          android:layout_marginTop="8dp"
-         android:text="Modification profil"
+         android:text="@string/modification_profil"
          app:layout_constraintBottom_toBottomOf="@+id/tvScore"
 
          app:layout_constraintStart_toStartOf="@+id/btnAchievementFragmentScore"
@@ -99,6 +100,7 @@
           android:layout_marginEnd="8dp"
           android:layout_marginStart="8dp"
           android:layout_marginTop="8dp"
+          android:contentDescription="@string/app_name"
           app:layout_constraintBottom_toTopOf="@+id/tvScore"
           app:layout_constraintEnd_toEndOf="@+id/imageView2"
           app:layout_constraintHorizontal_bias="0.505"
@@ -106,7 +108,5 @@
           app:layout_constraintTop_toTopOf="@+id/imageView2"
           app:layout_constraintVertical_bias="0.111"
           app:srcCompat="@drawable/ic_account_circle_white_24dp" />
-
-
  </android.support.constraint.ConstraintLayout>
 

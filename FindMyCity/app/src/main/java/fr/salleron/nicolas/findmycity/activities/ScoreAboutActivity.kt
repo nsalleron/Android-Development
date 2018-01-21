@@ -6,26 +6,25 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerTitleStrip
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.util.TypedValue
+import android.view.WindowManager
 import fr.salleron.nicolas.findmycity.R
 import fr.salleron.nicolas.findmycity.adapter.OptionAdapter
 import fr.salleron.nicolas.findmycity.fragments.AboutFragment
 import fr.salleron.nicolas.findmycity.fragments.ScoreFragment
-import java.util.ArrayList
-import android.support.v4.content.ContextCompat
-import android.view.WindowManager
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.games.Games
+import java.util.*
 
 
 /**
 * Created by nicolassalleron on 15/01/2018.
 */
-class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener, ScoreFragment.OnFragmentInteractionListener {
+class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener,
+        ScoreFragment.OnFragmentInteractionListener {
 
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +71,7 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
     }
 
     override fun onFragmentInteraction(uri: Uri) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 }

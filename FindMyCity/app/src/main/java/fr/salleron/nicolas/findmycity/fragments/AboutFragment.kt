@@ -12,14 +12,6 @@ import android.webkit.WebView
 
 import fr.salleron.nicolas.findmycity.R
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [AboutFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [AboutFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AboutFragment : Fragment() {
 
     // TODO: Rename and change types of parameters
@@ -27,14 +19,9 @@ class AboutFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-
-    }
-
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val v =  inflater?.inflate(R.layout.fragment_about, container, false)
         val web = v?.findViewById<WebView>(R.id.webview)

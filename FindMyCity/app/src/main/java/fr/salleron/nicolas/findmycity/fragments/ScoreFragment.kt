@@ -1,56 +1,37 @@
 package fr.salleron.nicolas.findmycity.fragments
 
 import android.content.Context
-import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.ListFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.common.api.GoogleApiClient
-
-import fr.salleron.nicolas.findmycity.R
-import com.google.android.gms.games.Games
-import android.provider.MediaStore
-import com.google.android.gms.common.images.ImageManager
-import com.squareup.picasso.Picasso
-import com.google.android.gms.tasks.Task
-import android.support.annotation.NonNull
 import android.widget.*
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.google.android.gms.tasks.OnCompleteListener
-import com.squareup.picasso.Transformation
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.images.ImageManager
+import com.google.android.gms.games.Games
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog
+import fr.salleron.nicolas.findmycity.R
 import fr.salleron.nicolas.findmycity.data.ListAdapter
-import java.io.*
-import java.util.*
+import java.io.File
+import java.io.FileReader
+import java.io.PrintWriter
 
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [ScoreFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [ScoreFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
-
     private var mListener: OnFragmentInteractionListener? = null
-    var apiClient: GoogleApiClient? = null
-    var btnShowScore : Button? = null
-    var btnShowAchievement : Button? = null
-    var btnModificationProfil : Button? = null
-    var imgUser : ImageView? = null
-    var list : ListView? = null
+    private var apiClient: GoogleApiClient? = null
+    private var btnShowScore : Button? = null
+    private var btnShowAchievement : Button? = null
+    private var btnModificationProfil : Button? = null
+    private var imgUser : ImageView? = null
+    private var list : ListView? = null
 
+    @Suppress("PrivatePropertyName")
     private val TAG = "ScoreFragment"
 
     private var tvScore: TextView? = null
@@ -68,9 +49,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
                     activity.finish()
                 }.build()
 
-
-
-        btnShowScore =  v?.findViewById<Button>(R.id.btnScoreFragmentScore)
+        btnShowScore =  v?.findViewById(R.id.btnScoreFragmentScore)
         btnShowScore?.setOnClickListener {
             if(apiClient!!.isConnected){
                 showLeaderboard()
@@ -91,15 +70,15 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
         btnModificationProfil = v?.findViewById(R.id.btnModificationProfileFragmentScore)
         btnModificationProfil?.setOnClickListener {
+            @Suppress("DEPRECATION")
             LovelyTextInputDialog(activity,R.style.TintTheme)
                     .setTopColor(resources.getColor(R.color.colorPrimary))
                     .setTitle("Votre nouveau pseudo")
                     .setMessage("Quel est votre nouvel pseudo?")
                     .setIcon(R.drawable.ic_launcher_foreground)
-                    .setConfirmButton(android.R.string.ok, LovelyTextInputDialog.OnTextInputConfirmListener {
+                    .setConfirmButton(android.R.string.ok, {
                         text ->
-                        if(text.length != 0){
-
+                        if(text.isNotEmpty()){
                             val dir = activity.filesDir
                             File(dir,"_options.txt").delete()
                             val fos = activity.openFileOutput("_options.txt",Context.MODE_APPEND)
@@ -115,7 +94,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
 
         imgUser = v?.findViewById(R.id.profile)
-        tvScore = v?.findViewById<TextView>(R.id.tvScore)
+        tvScore = v?.findViewById(R.id.tvScore)
 
         /* La list */
         try {
@@ -124,7 +103,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
             val adapter = ListAdapter(activity, R.layout.itemlistrow, fi.readLines())
             //val adapter = ArrayAdapter<String>(activity,android.R.layout.simple_list_item_1,fi.readLines())
             listAdapter = adapter
-            list?.setOnItemClickListener { adapterView, _, i, l ->
+            list?.setOnItemClickListener { _, _, i, _ ->
                 Log.e(TAG,"Item : "+i)
             }
         }catch (ignored :java.io.FileNotFoundException){ }
@@ -134,7 +113,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
 
 
-    fun showAchievements() {
+    private fun showAchievements() {
         startActivityForResult(
                 Games.Achievements
                         .getAchievementsIntent(apiClient),
@@ -142,7 +121,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
         )
     }
 
-    fun showLeaderboard() {
+    private fun showLeaderboard() {
         startActivityForResult(
                 Games.Leaderboards.getLeaderboardIntent(apiClient,
                         getString(R.string.leaderboard_classement_test_1)), 0)

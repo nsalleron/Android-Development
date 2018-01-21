@@ -4,21 +4,19 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import fr.salleron.nicolas.findmycity.R
-import android.util.Log
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.games.Games
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.View
+import android.widget.Button
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.games.Games
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog
-import fr.salleron.nicolas.findmycity.data.Difficulty
+import fr.salleron.nicolas.findmycity.R
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -35,9 +33,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var networkstate = false
     private var allGood = false
 
-    var perms = arrayOf(Manifest.permission.GET_ACCOUNTS,
+    private var perms = arrayOf(Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE)
-    val permsRequestCode = 200
+    private val permsRequestCode = 200
+
 
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             account = true
             internet = true
             networkstate = true
+            allGood = true
         }
 
         btn0 = findViewById(R.id.lvl0)
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    fun checkIfPermsGranted(){
+    private fun checkIfPermsGranted(){
         if(!internet || !account){
             FancyGifDialog.Builder(this)
                     .setPositiveBtnBackground("#FF4081")
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (permsRequestCode == permsRequestCode) {
+        if (permsRequestCode == requestCode) {
             account = grantResults[0] == PackageManager.PERMISSION_GRANTED
             internet = grantResults[1] == PackageManager.PERMISSION_GRANTED
             networkstate = grantResults[2] == PackageManager.PERMISSION_GRANTED

@@ -14,4 +14,8 @@
     <string name="modeChrono">Mode Chronomètre</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="score_100000000">Score : 100000000</string>
+    <string name="exploits">EXPLOITS</string>
+    <string name="modification_profil">Modification profil</string>
+    <string name="scores">SCORES</string>
 </resources>
