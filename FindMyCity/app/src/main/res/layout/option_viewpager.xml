@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,10 +24,11 @@
         android:id="@+id/options_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        tools:ignore="InefficientWeight">
 
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pager_title_strip_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"

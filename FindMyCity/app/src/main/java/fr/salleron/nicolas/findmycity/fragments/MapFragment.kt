@@ -37,6 +37,10 @@ class MapFragment : Fragment() {
             mMap?.isBuildingsEnabled = false
             mMap?.isIndoorEnabled = false
             mMap?.isTrafficEnabled = false
+            mMap?.uiSettings?.isCompassEnabled = false
+            mMap?.uiSettings?.isMyLocationButtonEnabled = false
+            mMap?.uiSettings?.isIndoorLevelPickerEnabled = false
+            mMap?.uiSettings?.isMapToolbarEnabled = false
             Log.e("MapFragment","getMapAsync")
         }
 

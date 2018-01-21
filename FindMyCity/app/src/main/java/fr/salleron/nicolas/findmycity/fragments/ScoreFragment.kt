@@ -124,7 +124,7 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
     private fun showLeaderboard() {
         startActivityForResult(
                 Games.Leaderboards.getLeaderboardIntent(apiClient,
-                        getString(R.string.leaderboard_classement_test_1)), 0)
+                        getString(R.string.leaderboard_scores_des_joueurs)), 0)
     }
 
     override fun onAttach(context: Context) {

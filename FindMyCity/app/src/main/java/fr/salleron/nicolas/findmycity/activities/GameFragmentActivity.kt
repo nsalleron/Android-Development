@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.StreetViewPanorama
 import com.google.android.gms.maps.model.*
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog
+import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import fr.salleron.nicolas.findmycity.R
 import fr.salleron.nicolas.findmycity.adapter.GameAdapter
 import fr.salleron.nicolas.findmycity.data.City
@@ -72,7 +73,6 @@ class GameFragmentActivity : FragmentActivity(),
     private var myPager : ViewPager? = null
     private var gameEnded = false
     private var mode = ""
-
 
 
     @SuppressLint("ObsoleteSdkInt", "InflateParams")
@@ -133,6 +133,8 @@ class GameFragmentActivity : FragmentActivity(),
             else -> pts.setTextColor(resources.getColor(R.color.colorPrimary))
         }
         pts.textSpacing = 200
+        pts.drawFullUnderline = false
+        pts.tabIndicatorColor = resources.getColor(R.color.colorPrimary,theme)
 
         /* play services */
         apiClient = GoogleApiClient.Builder(this)
@@ -163,39 +165,49 @@ class GameFragmentActivity : FragmentActivity(),
 
         Snackbar.make(viewNormal!!, "Astuce : "+
                 arrayCity[currentCity].help, Snackbar.LENGTH_LONG)
-                .setDuration(5000)
+                .setDuration(10000)
                 .show()
     }
     override fun onMapClick(p0: LatLng?) {
-        if(gameEnded){
-            endOfGame()
-            return
-        }
+        LovelyStandardDialog(this@GameFragmentActivity)
+                .setTopColor(resources.getColor(R.color.colorPrimary,theme))
+                .setButtonsColorRes(R.color.md_deep_orange_500)
+                .setIcon(R.drawable.ic_launcher_foreground)
+                .setTitle("Êtes vous certain ?")
+                .setMessage("Cette décision n'est pas annulable !")
+                .setPositiveButton(android.R.string.ok,{
+                    if(gameEnded){
+                        endOfGame()
+                    }
+                    /* Ligne entre les deux coordonnées */
+                    val points = ArrayList<LatLng>()
+                    val polyLineOptions = PolylineOptions()
+                    points.add(LatLng(arrayCity[currentCity].lat!!, arrayCity[currentCity].lng!!))
+                    points.add(LatLng(p0!!.latitude,p0.longitude))
+                    polyLineOptions.width((7 * 1).toFloat())
+                    polyLineOptions.geodesic(true)
+                    currentColor = (currentColor+1)%arrayColor.size /*Changement de la couleur */
+                    polyLineOptions.color(arrayColor[currentColor])
+                    polyLineOptions.addAll(points)
+                    val polyline = mapViewFragment?.mMap?.addPolyline(polyLineOptions)
+                    polyline?.isGeodesic = true
 
-        /* Ligne entre les deux coordonnées */
-        val points = ArrayList<LatLng>()
-        val polyLineOptions = PolylineOptions()
-        points.add(LatLng(arrayCity[currentCity].lat!!, arrayCity[currentCity].lng!!))
-        points.add(LatLng(p0!!.latitude,p0.longitude))
-        polyLineOptions.width((7 * 1).toFloat())
-        polyLineOptions.geodesic(true)
-        currentColor = (currentColor+1)%arrayColor.size /*Changement de la couleur */
-        polyLineOptions.color(arrayColor[currentColor])
-        polyLineOptions.addAll(points)
-        val polyline = mapViewFragment?.mMap?.addPolyline(polyLineOptions)
-        polyline?.isGeodesic = true
+                    mapViewFragment?.mMap?.addMarker(MarkerOptions()
+                            .position(LatLng(arrayCity[currentCity].lat!!, arrayCity[currentCity].lng!!))
+                            .draggable(false)
+                            .title(arrayCity[currentCity].name)
+                            .snippet(arrayCity[currentCity].snippet))
 
-        mapViewFragment?.mMap?.addMarker(MarkerOptions()
-                .position(LatLng(arrayCity[currentCity].lat!!, arrayCity[currentCity].lng!!))
-                .draggable(true))
+                    mapViewFragment?.mMap?.addMarker(MarkerOptions()
+                            .position(p0)
+                            .draggable(false)
+                            .icon(BitmapDescriptorFactory
+                                    .fromResource(R.drawable.ic_account_circle_white_24dp)))
 
-        mapViewFragment?.mMap?.addMarker(MarkerOptions()
-                .position(p0)
-                .draggable(false)
-                .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.ic_account_circle_white_24dp)))
-
-        showDialogAndComputeScore(p0)
+                    showDialogAndComputeScore(p0)
+                })
+                .setNegativeButton(android.R.string.no,{})
+                .show()
     }
 
     private fun showDialogAndComputeScore(p0: LatLng?) {
@@ -237,6 +249,9 @@ class GameFragmentActivity : FragmentActivity(),
                                 mapViewFragment?.mMap?.clear()
                                 myPager?.setCurrentItem(0,true)
                             }
+                            .OnNegativeClicked {
+                                finish()
+                            }
                             .build()
 
                 }
@@ -249,7 +264,7 @@ class GameFragmentActivity : FragmentActivity(),
                         CameraUpdateFactory.newLatLngZoom(LatLng(0.0,0.0), 1.toFloat()))
                 Snackbar.make(viewNormal!!, "Astuce : "+
                         arrayCity[currentCity].help,Snackbar.LENGTH_LONG)
-                        .setDuration(5000)
+                        .setDuration(10000)
                         .show()
 
                 myPager?.setCurrentItem(0,true)
@@ -283,15 +298,42 @@ class GameFragmentActivity : FragmentActivity(),
                             getString(R.string.achievement_alors_cest_2_avenue_de____))
             5 -> Games.Achievements
                     .unlock(apiClient,
-                            getString(R.string.achievement_master_sar_reprsente))
+                            getString(R.string.achievement_jsuis_sur_cest_l))
             10 -> Games.Achievements
                     .unlock(apiClient,
                             getString(R.string.achievement_ppm_mon_ami))
+            15 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_pas_besoin_de_carte))
+
+        }
+
+        when {
+            currentScore > 25 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_25_points))
+            currentScore > 50 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_50_points))
+            currentScore > 100 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_100_points))
+            currentScore > 125 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_125_points))
+            currentScore > 150 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_150_points))
+            currentScore > 200 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_200_points))
+            currentScore > 250 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_vous_avez_dpass_250_points))
+            currentScore > 270 -> Games.Achievements
+                    .unlock(apiClient,getString(R.string.achievement_omg_omg_omg))
         }
     }
 
     private fun endOfGame() {
         if (mode == getString(R.string.modeChrono)){
+            if(apiClient!!.isConnected)
+                Games.Leaderboards.submitScore(apiClient,
+                    getString(R.string.leaderboard_scores_en_mode_chronomtre),
+                    currentScore.toLong()) //le score augmentait trop vite avec les km
+
             FancyGifDialog.Builder(this)
                     .setPositiveBtnBackground("#FF4081")
                     .setPositiveBtnText("Accueil")
@@ -324,7 +366,7 @@ class GameFragmentActivity : FragmentActivity(),
                     .OnNegativeClicked {
                         val sendIntent = Intent()
                         sendIntent.action = Intent.ACTION_SEND
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé "+currentScore + " sur "+R.string.app_name)
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hello ! J'ai réalisé "+currentScore + " sur "+getString(R.string.app_name))
                         sendIntent.type = "text/plain"
                         startActivity(sendIntent)
                     }
@@ -338,7 +380,7 @@ class GameFragmentActivity : FragmentActivity(),
         if(apiClient!!.isConnected)
              startActivityForResult(
                 Games.Leaderboards.getLeaderboardIntent(apiClient,
-                        getString(R.string.leaderboard_classement_test_1)), 0)
+                        getString(R.string.leaderboard_scores_des_joueurs)), 0)
         else
             Toast.makeText(this,"Connexion à internet impossible",Toast.LENGTH_SHORT).show()
     }
@@ -445,7 +487,7 @@ class GameFragmentActivity : FragmentActivity(),
         Log.e(TAG,"CurrentScore :" + currentLvl )
         if(apiClient!!.isConnected){
             Games.Leaderboards.submitScore(apiClient,
-                    getString(R.string.leaderboard_classement_test_1),
+                    getString(R.string.leaderboard_scores_des_joueurs),
                     currentScore.toLong()) //le score augmentait trop vite avec les km
         }
 
@@ -485,7 +527,7 @@ class GameFragmentActivity : FragmentActivity(),
                 } catch (ignored: InterruptedException) { }
 
             }
-            endOfGame()
+            runOnUiThread { endOfGame()}
         }
 
     }

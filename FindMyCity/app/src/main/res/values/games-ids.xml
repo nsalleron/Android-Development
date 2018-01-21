@@ -12,12 +12,32 @@ Save this file as res/values/games-ids.xml in your project.
     <string name="achievement_bravo__vous_avez_dpass_1_niveau" translatable="false">CgkI0Lekv7YYEAIQBA</string>
     <!-- achievement Alors c'est 2 avenue de ... -->
     <string name="achievement_alors_cest_2_avenue_de_..." translatable="false">CgkI0Lekv7YYEAIQBg</string>
-    <!-- achievement Master SAR représente -->
-    <string name="achievement_master_sar_reprsente" translatable="false">CgkI0Lekv7YYEAIQBw</string>
+    <!-- achievement J'suis sur c'est là -->
+    <string name="achievement_jsuis_sur_cest_l" translatable="false">CgkI0Lekv7YYEAIQBw</string>
     <!-- achievement PPM mon ami -->
     <string name="achievement_ppm_mon_ami" translatable="false">CgkI0Lekv7YYEAIQCA</string>
-    <!-- leaderboard classement_test_1 -->
-    <string name="leaderboard_classement_test_1" translatable="false">CgkI0Lekv7YYEAIQBQ</string>
+    <!-- achievement Pas besoin de carte! -->
+    <string name="achievement_pas_besoin_de_carte" translatable="false">CgkI0Lekv7YYEAIQCQ</string>
+    <!-- achievement Vous avez dépassé 25 points -->
+    <string name="achievement_vous_avez_dpass_25_points" translatable="false">CgkI0Lekv7YYEAIQCg</string>
+    <!-- achievement Vous avez dépassé 50 points -->
+    <string name="achievement_vous_avez_dpass_50_points" translatable="false">CgkI0Lekv7YYEAIQCw</string>
+    <!-- achievement Vous avez dépassé 100 points -->
+    <string name="achievement_vous_avez_dpass_100_points" translatable="false">CgkI0Lekv7YYEAIQDA</string>
+    <!-- achievement Vous avez dépassé 125 points -->
+    <string name="achievement_vous_avez_dpass_125_points" translatable="false">CgkI0Lekv7YYEAIQDQ</string>
+    <!-- achievement Vous avez dépassé 150 points -->
+    <string name="achievement_vous_avez_dpass_150_points" translatable="false">CgkI0Lekv7YYEAIQDg</string>
+    <!-- achievement Vous avez dépassé 200 points -->
+    <string name="achievement_vous_avez_dpass_200_points" translatable="false">CgkI0Lekv7YYEAIQDw</string>
+    <!-- achievement Vous avez dépassé 250 points -->
+    <string name="achievement_vous_avez_dpass_250_points" translatable="false">CgkI0Lekv7YYEAIQEA</string>
+    <!-- achievement OMG OMG OMG -->
+    <string name="achievement_omg_omg_omg" translatable="false">CgkI0Lekv7YYEAIQEQ</string>
+    <!-- leaderboard Scores des joueurs -->
+    <string name="leaderboard_scores_des_joueurs" translatable="false">CgkI0Lekv7YYEAIQBQ</string>
+    <!-- leaderboard Scores en mode chronomètre -->
+    <string name="leaderboard_scores_en_mode_chronomtre" translatable="false">CgkI0Lekv7YYEAIQEg</string>
     <!-- event leaderboard_test_1 -->
     <string name="event_leaderboard_test_1" translatable="false">CgkI0Lekv7YYEAIQAw</string>
 </resources>

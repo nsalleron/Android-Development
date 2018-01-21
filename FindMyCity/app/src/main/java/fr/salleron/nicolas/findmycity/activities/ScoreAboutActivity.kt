@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.PagerTabStrip
 import android.support.v4.view.PagerTitleStrip
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
@@ -59,13 +60,15 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
         myPager.adapter = myPagerAdapter
 
         //Mise en place des titres
-        val pts = findViewById<PagerTitleStrip>(R.id.pager_title_strip) as PagerTitleStrip
+        val pts = findViewById<PagerTabStrip>(R.id.pager_title_strip_option) as PagerTabStrip
         pts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pts.setTextColor(getColor(R.color.colorAccent))
+            pts.setTextColor(getColor(R.color.colorPrimary))
         } else
-            pts.setTextColor(resources.getColor(R.color.colorAccent,theme))
+            pts.setTextColor(resources.getColor(R.color.colorPrimary,theme))
         pts.textSpacing = 200
+        pts.drawFullUnderline = false
+        pts.tabIndicatorColor = resources.getColor(R.color.colorPrimary,theme)
         Log.e("TAG","END OK")
 
     }
