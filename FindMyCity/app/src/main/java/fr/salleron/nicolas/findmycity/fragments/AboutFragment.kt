@@ -26,6 +26,7 @@ class AboutFragment : Fragment() {
         val v =  inflater?.inflate(R.layout.fragment_about, container, false)
         val web = v?.findViewById<WebView>(R.id.webview)
         web?.loadUrl("file:///android_asset/about.html")
+
         return v
     }
 

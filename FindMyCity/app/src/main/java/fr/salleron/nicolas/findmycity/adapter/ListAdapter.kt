@@ -1,4 +1,4 @@
-package fr.salleron.nicolas.findmycity.data
+package fr.salleron.nicolas.findmycity.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context

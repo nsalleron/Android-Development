@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
  * @param fragmentManager le fragment manager
  * @param ArrayFrag la liste des fragments
  */
-class OptionAdapter constructor(fragmentManager: FragmentManager, ArrayFrag: ArrayList<Fragment>):
+class ScoreAboutAdapter constructor(fragmentManager: FragmentManager, ArrayFrag: ArrayList<Fragment>):
         FragmentStatePagerAdapter(fragmentManager) {
 
     private var fragments = ArrayFrag

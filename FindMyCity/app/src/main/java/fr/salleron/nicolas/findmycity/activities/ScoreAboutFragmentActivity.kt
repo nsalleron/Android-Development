@@ -8,14 +8,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerTabStrip
-import android.support.v4.view.PagerTitleStrip
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.util.TypedValue
 import android.view.WindowManager
 import fr.salleron.nicolas.findmycity.R
-import fr.salleron.nicolas.findmycity.adapter.OptionAdapter
+import fr.salleron.nicolas.findmycity.adapter.ScoreAboutAdapter
 import fr.salleron.nicolas.findmycity.fragments.AboutFragment
 import fr.salleron.nicolas.findmycity.fragments.ScoreFragment
 import java.util.*
@@ -24,7 +23,7 @@ import java.util.*
 /**
 * Created by nicolassalleron on 15/01/2018.
 */
-class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener,
+class ScoreAboutFragmentActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener,
         ScoreFragment.OnFragmentInteractionListener {
 
     @SuppressLint("ObsoleteSdkInt")
@@ -55,7 +54,7 @@ class ScoreAboutActivity : FragmentActivity(), AboutFragment.OnFragmentInteracti
         fragments.add(findMyCityAbout)
 
         //Mise en place de l'adaptateur
-        val myPagerAdapter = OptionAdapter(supportFragmentManager, fragments)
+        val myPagerAdapter = ScoreAboutAdapter(supportFragmentManager, fragments)
         val myPager = findViewById<ViewPager>(R.id.options_viewpager) as ViewPager
         myPager.adapter = myPagerAdapter
 

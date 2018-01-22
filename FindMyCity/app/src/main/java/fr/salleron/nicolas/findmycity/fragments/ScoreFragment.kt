@@ -16,7 +16,7 @@ import com.google.android.gms.common.images.ImageManager
 import com.google.android.gms.games.Games
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog
 import fr.salleron.nicolas.findmycity.R
-import fr.salleron.nicolas.findmycity.data.ListAdapter
+import fr.salleron.nicolas.findmycity.adapter.ListAdapter
 import java.io.File
 import java.io.FileReader
 import java.io.PrintWriter

@@ -29,7 +29,7 @@
             android:label="@string/title_activity_game"
             android:theme="@style/Theme.Design.NoActionBar" />
         <activity
-            android:name=".activities.ScoreAboutActivity"
+            android:name=".activities.ScoreAboutFragmentActivity"
             android:theme="@style/Theme.Design.Light" />
 
         <meta-data

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import com.daimajia.androidanimations.library.Techniques
@@ -16,6 +15,7 @@ import com.daimajia.androidanimations.library.YoYo
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.games.Games
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog
+import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import fr.salleron.nicolas.findmycity.R
 
 
@@ -67,8 +67,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 .addApi(Games.API)
                 .addScope(Games.SCOPE_GAMES)
                 .enableAutoManage(this) {
-                    Log.e(TAG, "Could not connect to Play games services")
-                    finish()
+                    LovelyStandardDialog(this@MainActivity)
+                            .setTopColor(resources.getColor(R.color.colorPrimary,theme))
+                            .setButtonsColorRes(R.color.md_deep_orange_500)
+                            .setIcon(R.drawable.ic_launcher_foreground)
+                            .setTitle("Il vous faut internet !")
+                            .setMessage("Malheureusement, l'application ne peut fonctionner sans.")
+                            .setPositiveButton(android.R.string.ok, {
+                                finish()
+                            })
+                            .show()
                 }.build()
 
         YoYo.with(Techniques.FadeIn)
@@ -102,7 +110,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (btn2 === p0)
             this.launchGameActivityWithDifficulty(0,getString(R.string.modeChrono))
         if (options === p0){
-            val intent = Intent(this,  ScoreAboutActivity::class.java)
+            val intent = Intent(this,  ScoreAboutFragmentActivity::class.java)
             if(allGood){
                 startActivity(intent)
             }else{
