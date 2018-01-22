@@ -1,8 +1,10 @@
 package fr.salleron.nicolas.findmycity.data
 
-/**
-* Created by nicolassalleron on 13/01/2018.
-*/
+ /**
+ * Created by nicolassalleron on 13/01/2018.
+ * @param lvl Permet l'ajout de villes en fonctions du niveau
+ * [mapData] contient l'ensemble de nos villes.
+ */
 class Difficulty(lvl: Int) {
 
     var mapData : ArrayList<City> = ArrayList()

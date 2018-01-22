@@ -10,9 +10,11 @@ import android.widget.TextView
 import fr.salleron.nicolas.findmycity.R
 
 /**
-* Created by nicolassalleron on 17/01/2018.
-*/
-
+ * Permet de mettre en place les éléments dans la liste
+ * @param context : le contexte de l'application
+ * @param resource : le XML permettant l'affichage
+ * @param items : La liste des items
+ */
 class ListAdapter(context: Context, resource: Int, items: List<String>) :
         ArrayAdapter<String>(context, resource, items) {
 
@@ -28,6 +30,7 @@ class ListAdapter(context: Context, resource: Int, items: List<String>) :
 
         val p = getItem(position)
 
+        /* On rempli les tv */
         if (p != null) {
             val tt1 = v!!.findViewById<TextView>(R.id.score)
             val tt2 = v.findViewById<TextView>(R.id.date)

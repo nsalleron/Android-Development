@@ -40,8 +40,14 @@ import java.io.PrintWriter
 import java.util.*
 
 /**
-* Created by nicolassalleron on 15/01/2018.
-*/
+ * Cette classe permet l'instanciation des deux fragments [StreetFragment] et [MapFragment]
+ * C'est également elle qui gère l'affichage des scores et le changement de niveaux.
+ * Implements plusieurs interfaces principalement :
+ *  - [GoogleMap.OnMapClickListener] pour handler les touches sur la carte
+ *  - [StreetViewPanorama.OnStreetViewPanoramaChangeListener] pour handler les changements de l'utilisateur, not used
+ *  - [GoogleApiClient.ConnectionCallbacks] pour handler le retour info des serveurs Google.
+ * @author Nicolas Salleron
+ */
 class GameFragmentActivity : FragmentActivity(),
         StreetFragment.OnFragmentInteractionListener,
         MapFragment.OnFragmentInteractionListener,
@@ -74,7 +80,16 @@ class GameFragmentActivity : FragmentActivity(),
     private var gameEnded = false
     private var mode = ""
 
-
+    /**
+     * - Récupération de la difficulter [currentDifficulty],
+     * - Instantiation du layout [viewNormal],
+     * - Personnalisation toolbar [toolbar] et de la barre de status [window]
+     * - Démarrage des fragments [streetViewFragment],[mapViewFragment] et liaison interfragments.
+     * - Mise en place du viewPager [myPager]
+     * - Mise en place du TitleTabStrip [pts]
+     * - Mise en place de l'API Google Games [apiClient]
+     * - Mise en place ou non du mode de jeu chronomètre [mode]
+     */
     @SuppressLint("ObsoleteSdkInt", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -168,6 +183,14 @@ class GameFragmentActivity : FragmentActivity(),
                 .setDuration(10000)
                 .show()
     }
+
+
+    /**
+     * Handle du clique sur la carte [mapViewFragment].
+     * Calcul distrance entre les points.
+     * Mise en place du Marker.
+     * Affichage du score via apl [showDialogAndComputeScore].
+     */
     override fun onMapClick(p0: LatLng?) {
         LovelyStandardDialog(this@GameFragmentActivity)
                 .setTopColor(resources.getColor(R.color.colorPrimary,theme))
@@ -210,6 +233,9 @@ class GameFragmentActivity : FragmentActivity(),
                 .show()
     }
 
+    /**
+     * Détermine le score et affiche une boite de dialog personnalisée en fonction de la distance.
+     */
     private fun showDialogAndComputeScore(p0: LatLng?) {
         Log.e(TAG,"Current level of difficulty : "+ (currentDifficulty))
 
@@ -284,7 +310,9 @@ class GameFragmentActivity : FragmentActivity(),
     }
 
 
-
+    /**
+     * Déverrouillage des scores via [apiClient]
+     */
     private fun unlockAchievements() {
         if(!apiClient!!.isConnected)
             return
@@ -327,6 +355,9 @@ class GameFragmentActivity : FragmentActivity(),
         }
     }
 
+    /**
+     * Fonction appellé quand c'est la fin de partie.
+     */
     private fun endOfGame() {
         if (mode == getString(R.string.modeChrono)){
             if(apiClient!!.isConnected)
@@ -376,6 +407,9 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    /**
+     * Affiche le leaderboard [apiClient]
+     */
     private fun showLeaderboard() {
         if(apiClient!!.isConnected)
              startActivityForResult(
@@ -385,15 +419,25 @@ class GameFragmentActivity : FragmentActivity(),
             Toast.makeText(this,"Connexion à internet impossible",Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Appelé au retour de l'affichage du leaderboard [showLeaderboard]
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         dialog?.build()
     }
 
+    /**
+     * setOnClickListener du bouton contenu dans [streetViewFragment]
+     */
     fun goToViewTwo(){
         myPager?.setCurrentItem(1,true)
     }
 
+    /**
+     * Fonction qui permet de donner un gif et un titre au dialog de [showDialogAndComputeScore]
+     * Elle met également à jour le score
+     */
     private fun giveMeGifAndTitle(dialog: FancyGifDialog.Builder,lat : Double, lng : Double) {
 
         var pointReponse = 0
@@ -494,6 +538,11 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    /**
+     * Retourne la country pour un couple lat/lng
+     * @param lat la latitude
+     * @param lng la longitude
+     */
     private fun getCountry(lat: Double, lng : Double) : String{
 
         return if(isNetworkAvailable()){
@@ -509,6 +558,10 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    /**
+     * C'est moche de faire comme ça,
+     * TODO Asynctask
+     */
     inner class MyTimer : java.lang.Runnable {
 
         override fun run() {
@@ -532,17 +585,22 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
-
-    }
-
-    override fun onStreetViewPanoramaChange(p0: StreetViewPanoramaLocation?) {
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-
-    }
-
+    /**
+     * Not used
+     */
+    override fun onFragmentInteraction(uri: Uri) {}
+    /**
+     * Not used
+     */
+    override fun onStreetViewPanoramaChange(p0: StreetViewPanoramaLocation?) {}
+    /**
+     * Not used
+     */
+    override fun onConnectionSuspended(p0: Int) {}
+    /**
+     * Charge le nom du joueur si ce dernier est contenu dans un fichier ou au retour de l'[apiClient]
+     * TODO dans le cas ou c'est pas disponible, forcer le chargement local!
+     */
     override fun onConnected(p0: Bundle?) {
         val fos = openFileInput("_options.txt")
         val fi = FileReader(fos.fd)
@@ -554,6 +612,9 @@ class GameFragmentActivity : FragmentActivity(),
 
     }
 
+    /**
+     * Permet de check la connexion réseau via [ConnectivityManager]
+     */
     private fun isNetworkAvailable() : Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetworkInfo = connectivityManager.activeNetworkInfo
@@ -561,6 +622,9 @@ class GameFragmentActivity : FragmentActivity(),
     }
 
 
+    /**
+     * Sauvegarde du résultat vers le fichier _score.txt en [Context.MODE_APPEND]
+     */
     override fun onDestroy() {
         super.onDestroy()
         val fos = openFileOutput("_scores.txt",Context.MODE_APPEND)

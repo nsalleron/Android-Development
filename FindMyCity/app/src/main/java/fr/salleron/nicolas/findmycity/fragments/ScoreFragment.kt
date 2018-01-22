@@ -21,6 +21,11 @@ import java.io.File
 import java.io.FileReader
 import java.io.PrintWriter
 
+/**
+ * Affichage du score ainsi que des statistiques de l'utilisateur
+ * Utilisation de [ListFragment] pour pouvoir gérer notre [list]
+ * Utilisation de [GoogleApiClient.ConnectionCallbacks] pour avoir le retour de notre [apiClient]
+ */
 class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -112,7 +117,9 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
     }
 
 
-
+    /**
+     * Affiche les succès via [apiClient]
+     */
     private fun showAchievements() {
         startActivityForResult(
                 Games.Achievements
@@ -121,6 +128,9 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
         )
     }
 
+    /**
+     * Affiche le leaderboard [apiClient]
+     */
     private fun showLeaderboard() {
         startActivityForResult(
                 Games.Leaderboards.getLeaderboardIntent(apiClient,
@@ -158,7 +168,10 @@ class ScoreFragment : ListFragment(),GoogleApiClient.ConnectionCallbacks {
     override fun onConnectionSuspended(p0: Int) {
 
     }
-
+    /**
+     * Charge le nom du joueur si ce dernier est contenu dans un fichier ou au retour de l'[apiClient]
+     * TODO dans le cas ou c'est pas disponible, forcer le chargement local!
+     */
     override fun onConnected(p0: Bundle?) {
         val fos = activity.openFileInput("_options.txt")
         val fi = FileReader(fos.fd)

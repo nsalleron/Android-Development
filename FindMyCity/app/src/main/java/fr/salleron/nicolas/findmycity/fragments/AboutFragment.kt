@@ -12,13 +12,13 @@ import android.webkit.WebView
 
 import fr.salleron.nicolas.findmycity.R
 
+/**
+ * Juste un fragment contenant une webview
+ * TODO Mettre une restriction sur les domaines.
+ */
 class AboutFragment : Fragment() {
 
-    // TODO: Rename and change types of parameters
-
-
     private var mListener: OnFragmentInteractionListener? = null
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -29,7 +29,6 @@ class AboutFragment : Fragment() {
 
         return v
     }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -18,11 +18,16 @@ import com.shashank.sony.fancygifdialoglib.FancyGifDialog
 import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import fr.salleron.nicolas.findmycity.R
 
-
+/**
+ * Cette classe permet la mise en place de boutons
+ * Elle vérifie les permissions.
+ * Elle ne permet pas le lancement de l'application si elles ne sont pas activée.
+ * TODO faire en sorte que si.
+ *
+ * @author Nicolas Salleron
+ */
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    @Suppress("PrivatePropertyName")
-    private val TAG = "MainActivity"
     private var btn0: Button? = null
     private var btn1: Button? = null
     private var btn2: Button? = null
@@ -100,8 +105,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-
-
+    /**
+     * Handler du click sur les boutons [btn0], [btn1], [btn2] et [options]
+     * Vérifie que les permissions sont ok via [allGood]
+     */
     override fun onClick(p0: View?) {
         if (btn0 === p0)
             this.launchGameActivityWithDifficulty(0,getString(R.string.modeNormal))
@@ -119,8 +126,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * Affiche un dialog pour vérifier si les permissions sont OK
+     * Utilise [internet], [account], [networkstate]
+     */
     private fun checkIfPermsGranted(){
-        if(!internet || !account){
+        if(!internet || !account || !networkstate){
             FancyGifDialog.Builder(this)
                     .setPositiveBtnBackground("#FF4081")
                     .setPositiveBtnText("kill myself ?")
@@ -135,6 +146,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+    /**
+     * Lancement d'un mode de jeu avec une certaine difficulté
+     */
     private fun launchGameActivityWithDifficulty(d: Int, mode : String){
         val intent = Intent(this,GameFragmentActivity::class.java).apply {
             putExtra("DIFFICULTY",d)
@@ -148,6 +162,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+    /**
+     * Retour de la requête pour les permissions.
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (permsRequestCode == requestCode) {
             account = grantResults[0] == PackageManager.PERMISSION_GRANTED

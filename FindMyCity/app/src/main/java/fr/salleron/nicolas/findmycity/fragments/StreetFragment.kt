@@ -14,6 +14,10 @@ import com.google.android.gms.maps.model.LatLng
 import fr.salleron.nicolas.findmycity.R
 import fr.salleron.nicolas.findmycity.activities.GameFragmentActivity
 
+/**
+ * Permet l'instiation de l'attribut [mStreetViewPanorama] et de la view [mStreetViewPanoramaView]
+ * Le handler des touches sur la [mStreetViewPanorama] est [gameFragmentActivity]
+ */
 class StreetFragment : Fragment() {
 
     var mapFragmentInstance: MapFragment? = null

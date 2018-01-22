@@ -21,8 +21,14 @@ import java.util.*
 
 
 /**
-* Created by nicolassalleron on 15/01/2018.
-*/
+ * Cette classe permet l'instanciation des deux fragments [StreetFragment] et [MapFragment]
+ * C'est également elle qui gère l'affichage des scores et le changement de niveaux.
+ * Implements plusieurs interfaces principalement :
+ *  - [GoogleMap.OnMapClickListener] pour handler les touches sur la carte
+ *  - [StreetViewPanorama.OnStreetViewPanoramaChangeListener] pour handler les changements de l'utilisateur, not used
+ *  - [GoogleApiClient.ConnectionCallbacks] pour handler le retour info des serveurs Google.
+ * @author Nicolas Salleron
+ */
 class ScoreAboutFragmentActivity : FragmentActivity(), AboutFragment.OnFragmentInteractionListener,
         ScoreFragment.OnFragmentInteractionListener {
 

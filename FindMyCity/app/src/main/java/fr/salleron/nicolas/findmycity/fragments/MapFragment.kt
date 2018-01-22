@@ -12,6 +12,10 @@ import com.google.android.gms.maps.*
 import fr.salleron.nicolas.findmycity.R
 import fr.salleron.nicolas.findmycity.activities.GameFragmentActivity
 
+/**
+ * Permet l'instiation de l'attribut [mMap] et de la view [mMapView]
+ * Le handler des touches sur la map est [gameFragmentActivity]
+ */
 class MapFragment : Fragment() {
 
     var streetFragmentInstance: StreetFragment? = null
